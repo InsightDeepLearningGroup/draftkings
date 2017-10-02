@@ -1,2 +1,2 @@
-# draftkings
-Use NFL points and salary data from Draftkings.com to draw teams.
+# Draftkings
+Use NFL points and salary data from draftkings.com to draw teams.
