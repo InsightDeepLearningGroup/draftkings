@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+import numpy as np
 
 
 def import_data():
@@ -22,8 +23,9 @@ def import_data():
     # read in the current DK salaries csv
     salaries_csvs = [csv for csv in csvs if 'Salaries' in csv]
     df_salaries = pd.DataFrame()
-    for csv in salaries_csvs[-1:]:
-        df_in = pd.read_csv('data/'+str(csv))
+    for csv in salaries_csvs:
+        df_in = pd.read_csv('data/' + str(csv))
+        df_in['Week'] = np.int(str(csv).replace('.csv', '').split('Week')[1])
         df_salaries = pd.concat([df_salaries, df_in], axis=0)
 
     # lots of NaN's to be filled
@@ -87,20 +89,20 @@ def clean_and_merge(df_dict=None, df_salaries=None, df_points=None):
     # merge players first
     df = df_salaries.loc[~(df_salaries.Position == 'DST')]\
         .set_index(['TeamID'])\
-        .join(df_points.loc[~(df_points.Pos == 'DST')].set_index(['TeamID']), lsuffix='_s')\
+        .join(df_points.loc[~(df_points.Pos == 'DST')].set_index(['TeamID']), lsuffix='_salaries')\
         .reset_index()
-    df = df.loc[(df.Lastname == df.Lastname_s) & (df.Firstname == df.Firstname_s)]
+    df = df.loc[(df.Lastname == df.Lastname_salaries) & (df.Firstname == df.Firstname_salaries)]
     print("Merged {0} player entries".format(len(df)))
 
     # merge the teams separately
     df_teams = df_salaries.loc[df_salaries.Position == 'DST']\
         .set_index(['TeamID'])\
-        .join(df_points.loc[df_points.Pos == 'DST'].set_index(['TeamID']), lsuffix='_s')\
+        .join(df_points.loc[df_points.Pos == 'DST'].set_index(['TeamID']), lsuffix='_salaries')\
         .reset_index()
     print("Merged {0} team entries".format(len(df_teams)))
 
-    # concatenate team and player entries
-    df = pd.concat([df, df_teams], axis=0)
+    # concatenate team and player entries where salary week -1 = points week
+    df = pd.concat([df.loc[df.Week_salaries-1 == df.Week], df_teams.loc[df_teams.Week_salaries-1 == df_teams.Week]], axis=0)
     print("Merged {0} entries total".format(len(df)))
 
     return df
