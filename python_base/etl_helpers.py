@@ -3,20 +3,20 @@ import os
 import numpy as np
 
 
-def import_data():
+def import_data(datapath='../data/'):
     '''
     Reads in all csvs with data in directory ./data/
     :return: dataframes with join dictionary, salaries, and points
     '''
 
     # get list of all csvs in the data directory
-    csvs = os.listdir("data/")
+    csvs = os.listdir(datapath)
 
     # read in team dictionary
     teamdict_csv = [csv for csv in csvs if 'TeamDict' in csv]
     df_dict = pd.DataFrame()
     for csv in teamdict_csv:
-        df_in = pd.read_csv('data/' + str(csv))
+        df_in = pd.read_csv(datapath + str(csv))
         df_dict = pd.concat([df_dict, df_in], axis=0)
 
 
@@ -24,7 +24,7 @@ def import_data():
     salaries_csvs = [csv for csv in csvs if 'Salaries' in csv]
     df_salaries = pd.DataFrame()
     for csv in salaries_csvs:
-        df_in = pd.read_csv('data/' + str(csv))
+        df_in = pd.read_csv(datapath + str(csv))
         df_in['Week'] = np.int(str(csv).replace('.csv', '').split('Week')[1])
         df_salaries = pd.concat([df_salaries, df_in], axis=0)
 
@@ -36,7 +36,7 @@ def import_data():
     points_csvs = [csv for csv in csvs if 'Points' in csv]
     df_points = pd.DataFrame()
     for csv in points_csvs:
-        df_in = pd.read_csv('data/'+str(csv))
+        df_in = pd.read_csv(datapath+str(csv))
         df_points = pd.concat([df_points, df_in], axis=0)
 
     # lots of NaN's to be filled
