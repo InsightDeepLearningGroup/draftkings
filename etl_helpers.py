@@ -57,13 +57,16 @@ def clean_and_merge(df_dict=None, df_salaries=None, df_points=None):
 
     # Split name into first and last name
     dfpart = pd.DataFrame(df_points['Name'].apply(lambda x: x
-                                                 .replace('.', '')
-                                                 .replace('Jr', '')
-                                                 .replace('Sr', '')
-                                                 .replace('-', '')
-                                                 .replace('\'', '')
-                                                 .replace('II', '').upper().split(', ', maxsplit=1)[
-                                                           ::-1]).values.tolist(), columns=['Firstname', 'Lastname'])
+                                                  .replace('.', '')
+                                                  .replace(' Jr', '')
+                                                  .replace(' Sr', '')
+                                                  .replace('-', '')
+                                                  .replace('\'', '')
+                                                  .replace('Benjamin', 'Ben')
+                                                  .replace('Danny', 'Dan')
+                                                  .replace(' II', '').upper().split(', ', maxsplit=1)[
+                                                            ::-1]).values.tolist(),
+                          columns=['Firstname', 'Lastname'])
 
     df_points = pd.concat([df_points, dfpart], axis=1)
 
@@ -74,11 +77,14 @@ def clean_and_merge(df_dict=None, df_salaries=None, df_points=None):
 
     # Split name into first and last name
     dfpart = pd.DataFrame(df_salaries['Name'].apply(lambda x: x.replace('.', '')
-                       .replace('Jr', '')
-                       .replace('Sr', '')
-                       .replace('-', '')
-                       .replace('\'', '')
-                       .replace('II', '').upper().split(' ', maxsplit=1)).values.tolist(), columns=['Firstname', 'Lastname'])
+                                                    .replace(' Jr', '')
+                                                    .replace(' Sr', '')
+                                                    .replace('-', '')
+                                                    .replace('\'', '')
+                                                    .replace('Benjamin', 'Ben')
+                                                    .replace('Danny', 'Dan')
+                                                    .replace(' II', '').upper().split(' ', maxsplit=1)).values.tolist(),
+                          columns=['Firstname', 'Lastname'])
 
     df_salaries = pd.concat([df_salaries, dfpart], axis=1)
 
