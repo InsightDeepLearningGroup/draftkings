@@ -1,2 +1,2 @@
-# Draftkings
-Use NFL points and salary data from draftkings.com to draw teams.
+# Moritz
+Use Moritz's points and salary data to draw Moritz-ish teams.
